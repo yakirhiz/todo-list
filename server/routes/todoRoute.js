@@ -17,7 +17,7 @@ router.get('/:username', (req, res) => {
     res.json(ret);
 })
 
-/* Maybe change the return value from the routes */
+/* Maybe change the return value from the following routes */
 router.post('/', (req, res) => {
     const { username, title, progress } = req.body;
     let id = `${index}`;

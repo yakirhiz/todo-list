@@ -5,16 +5,16 @@ const cors = require('cors');
 const app = express();
 const bcrypt = express('bcrypt');
 const jwt = require('jsonwebtoken');
+const pool = require('./db');
 
 const PORT = process.env.PORT ?? 8000;
 /**
  * TODOS:
- * 1. Save users & todos in databases
+ * 1. Save todos in database
  * 2. Authenticate users w/ jwt
- * 4. Upgrade the progress bar feature
- * 5. commit to github & deploy
- * 6. create an SQL file with database manipulation commands
- * 7. add .env file & insert stuff to i
+ * 3. Upgrade the progress bar feature
+ * 4. Commit to github & deploy to AWS
+ * 5. Insert variables to .env file
  */
 
 console.log(process.env.JWT_SECRET)
@@ -28,16 +28,13 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json());
 
-let users = {
-    "yakir" : { password: "123" },
-    "john" : { password: "333" }
-}
+// let users = { "root" : { password: "123" } };
 
-/* Todos api routing */
+/* Todos API routing */
 app.use('/todos', require('./routes/todoRoute'));
 
 /* Sign up */
-app.post('/signup', (req, res) => {
+app.post('/signup', async (req, res) => {
     const { username, password } = req.body;
 
     // TODO: Hashing the password
@@ -45,44 +42,51 @@ app.post('/signup', (req, res) => {
     // const hashedPassword = bcrypt.hash(password, salt);
 
     try {
-        // TODO: Insert user to database
-
+        const ret = await pool.query('INSERT INTO users (username, hashed_password) VALUES ($1, $2)', [username, password]);
+        // TODO: Send token
         // const token = jwt.sign({username}, process.env.JWT_SECRET, { expiresIn: '1hr' });
-
         // res.status(201).json({username, token});
+        res.json({ username });
     } catch (err) {
-        console.log(err);
+        res.json({ error: err.detail }); // NOTE: Forward error
     }
 
-    if (username in users) {
-        res.json({ error: `A user named '${username}' already exists.` });
-    } else {
-        users[username] = {password}
-        res.json({ username });
-    }
+    // if (username in users) {
+    //     res.json({ error: `A user named '${username}' already exists.` });
+    // } else {
+    //     users[username] = {password}
+    //     res.json({ username });
+    // }
 })
 
 /* Login */
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        // TODO: Check if the user is in the DB
+        const users = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+        if (users.rows.length < 1) {
+            res.json({ error: `A user named '${username}' does not exists.` });
+        } else if (users.rows[0].hashed_password !== password) {
+            res.json({ error: `Password is incorrect.` });
+        } else {
+            // TODO: Send token
+            // const token = jwt.sign({username}, process.env.JWT_SECRET, { expiresIn: '1hr' });
+            // res.json({username, token});
+            res.json({ username });
+        }
 
-        // const token = jwt.sign({username}, process.env.JWT_SECRET, { expiresIn: '1hr' });
-
-        // res.json({username, token});
     } catch (err) {
         console.log(err);
     }
 
-    if (!(username in users)) {
-        res.json({ error: `A user named '${username}' does not exists.` });
-    } else if (users[username].password !== password) {
-        res.json({ error: `Password is incorrect.` });
-    } else {
-        res.json({ username });
-    }
+    // if (!(username in users)) {
+    //     res.json({ error: `A user named '${username}' does not exists.` });
+    // } else if (users[username].password !== password) {
+    //     res.json({ error: `Password is incorrect.` });
+    // } else {
+    //     res.json({ username });
+    // }
 })
 
 /* Serve frontend */
