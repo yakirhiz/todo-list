@@ -7,7 +7,7 @@ export default function Modal({ mode, setShowModal, getData, todo }) {
   const [data, setData] = useState({
     username: editMode ? todo.username : username,
     title: editMode ? todo.title : "default",
-    progress: editMode ? todo.progress : "default"
+    progress: editMode ? todo.progress : 0
   })
 
   const postData = async (e) => {

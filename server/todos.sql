@@ -15,9 +15,9 @@ CREATE TABLE todos (
 DROP TABLE todos;
 
 INSERT INTO users (username, hashed_password) VALUES ('yakir', '123'), ('john', '333');
-DELETE FROM todos WHERE username='username';
+DELETE FROM users WHERE username='john';
 
 SELECT * FROM todos;
-INSERT INTO todos (id, username, title, progress) VALUES ('yakir', 'title', 50);
+INSERT INTO todos (id, username, title, progress) VALUES ('yakir', 'Eat breakfast', 50);
 UPDATE todos SET title = 'title1' WHERE id=id;
 DELETE FROM todos WHERE id=id;
