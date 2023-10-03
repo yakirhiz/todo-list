@@ -177,6 +177,10 @@ input {
     font-size: 13px;
 }
 
+.modal input#range {
+    padding: 12px 0px;
+}
+
 /* Auth */
 .auth-container {
     display: flex;

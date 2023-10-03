@@ -1,32 +1,39 @@
 const express = require('express');
 const router = express.Router();
-
 const pool = require('../db');
+const jwt = require('jsonwebtoken');
 
-// let todos = [
-//     { id: "0", username: "yakir", title: "Eat breakfast", progress: 0 }, 
-//     { id: "1", username: "hizki", title: "Eat lunch", progress: 50  }
-// ];
+const authenticate = async (req, res, next) => {
+    const authHeader = req.headers['authorization'];
 
-// let index = todos.length;
+    if (!authHeader || !authHeader.startsWith('Bearer'))
+        return res.sendStatus(401);
 
-router.get('/:username', async (req, res) => {
+    const token = authHeader.split(' ')[1];
+
+    try {
+        const decode = jwt.verify(token, process.env.JWT_SECRET);
+        console.log(`Handle GET request from ${decode.username}`);
+
+        next();
+    } catch (e) {
+        res.sendStatus(401);
+    }
+}
+
+router.get('/:username', authenticate, async (req, res) => {
     const { username } = req.params;
 
     try {
-        const query = 'SELECT * FROM todos WHERE username = $1';
-        const todos = await pool.query(query, [username]);
-        res.json(todos.rows);
+        const query = 'SELECT * FROM todos WHERE username = $1 ORDER BY id ASC';
+        const ret = await pool.query(query, [username]);
+        res.json(ret.rows);
     } catch (err) {
         console.log(err);
     }
-
-    // ret = todos.filter(item => item.username === username);
-    // res.json(ret);
 })
 
-/* Maybe change the return value from the following routes */
-router.post('/', async (req, res) => {
+router.post('/', authenticate, async (req, res) => {
     const { username, title, progress } = req.body;
 
     try {
@@ -36,14 +43,9 @@ router.post('/', async (req, res) => {
     } catch (err) {
         console.log(err);
     }
-
-    // let id = `${index}`;
-    // todos.push({ id, username, title, progress });
-    // index++;
-    // res.json(todos);
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticate, async (req, res) => {
     const { id } = req.params;
     const { username, title, progress } = req.body;
 
@@ -54,12 +56,9 @@ router.put('/:id', async (req, res) => {
     } catch (err) {
         console.log(err);
     }
-
-    // todos = todos.map((item) => item.id === id ? { id, username, title, progress } : item);
-    // res.json(todos);
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticate, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -69,9 +68,6 @@ router.delete('/:id', async (req, res) => {
     } catch (err) {
         console.log(err);
     }
-
-    // todos = todos.filter(item => item.id !== id);
-    // res.json(todos);
 })
 
 module.exports = router;

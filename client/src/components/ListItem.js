@@ -7,13 +7,18 @@ export default function ListItem({todo, getData}) {
   const [showModal, setShowModal] = useState(false);
 
   const deleteData = async () => {
+    const token = localStorage.getItem("token");
+    
     try {
       const res = await fetch(`http://localhost:8000/todos/${todo.id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
       });
 
       if (res.status === 200) {
         getData();
+      } else {
+        console.log(`Response status is not 200`)
       }
     } catch (err) {
       console.log(err);

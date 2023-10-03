@@ -7,7 +7,8 @@ export default function ListHeader({ listName, getData }) {
   const signOut = () => {
     localStorage.removeItem("username");
     localStorage.removeItem("authToken");
-    window.location.reload();
+    localStorage.removeItem("token");
+    getData(); // window.location.reload(); // TODO: this approch is problematic when token expired
   }
 
   return (

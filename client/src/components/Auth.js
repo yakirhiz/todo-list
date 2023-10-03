@@ -1,43 +1,44 @@
 import { useState } from 'react';
 
-export default function Auth() {
+export default function Auth({ getData }) {
   const [isLogIn, setIsLogIn] = useState(true);
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState(null);
   const [error, setError] = useState(null);
 
-  //console.log(username, password, confirmPassword);
-
   const viewLogin = (status) => {
-    console.log(isLogIn);
     setError(null);
     setIsLogIn(status);
+    console.log(`isLogIn is set to ${status}`);
   };
 
   const handleSubmit = async (e, endpoint) => {
     e.preventDefault();
-    if (!isLogIn && password !== confirmPassword) {
+    
+    if (endpoint === 'signup' && password !== confirmPassword) {
       setError('Make sure passwords match!');
       return;
     }
+
     try {
-      const res = await fetch(`http://localhost:8000/${endpoint}`, {
+      const res = await fetch(`http://localhost:8000/users/${endpoint}`, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({username, password})
       });
 
       const json = await res.json();
-      console.log(json);
+      console.log(json)
 
       if (json.error) {
         setError(json.error);
       } else {
         localStorage.setItem("username", username);
         localStorage.setItem("authToken", true);
-        // setError(null);
-        window.location.reload();
+        localStorage.setItem("token", json.token);
+        setError(null);
+        getData(); // window.location.reload();
       }
     } catch (err) {
       setError('Cannot reach the server!');
@@ -59,11 +60,11 @@ export default function Auth() {
         <div className='auth-options'>
           <button 
             onClick={() => viewLogin(false)}
-            style={{backgroundColor: !isLogIn ? 'rgb(255,255,255)' : 'rgb(188, 188, 188)'}}
+            style={{backgroundColor: isLogIn ? 'white' : '#BCBCBC'}}
           >Sign Up</button>
           <button 
             onClick={() => viewLogin(true)}
-            style={{backgroundColor: isLogIn ? 'rgb(255,255,255)' : 'rgb(188, 188, 188)'}}
+            style={{backgroundColor: isLogIn ? '#BCBCBC' : 'white'}}
           >Login</button>
         </div>
       </div>
