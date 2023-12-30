@@ -11,8 +11,7 @@ export default function App() {
   const authToken = localStorage.getItem("authToken");
   const token = localStorage.getItem("token");
 
-  const [userRender, setUserRender] = useState([]); // can be in the dependency array
-  console.log(`used for rendering value: ${userRender}`);
+  const [userRender, setUserRender] = useState(false); // can be in the dependency array
 
   // useState initialize the variable only once
   const [todos, setTodos] = useState([]);
@@ -21,15 +20,14 @@ export default function App() {
     const username = localStorage.getItem("username");
     const authToken = localStorage.getItem("authToken");
     const token = localStorage.getItem("token");
-    console.log(`Fetching data for ${username}`);
+    console.log(`Fetching data for @${username}`);
 
     try {
       const res = await fetch(`http://localhost:8000/todos/${username}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const json = await res.json();
-      console.log(`Data recieved from server`);
-      console.log(json) // DEBUG
+      console.log(json) // DEBUG - Print return todos to console
       setTodos(json);
     } catch (err) {
       console.log(err);
@@ -52,7 +50,7 @@ export default function App() {
       {!authToken && <Auth getData={getData} />}
       {authToken &&
         <>
-          <ListHeader listName={'🔥Todolist'} getData={getData} />
+          <ListHeader listName={'🔥Todolist'} getData={getData} setTodos={setTodos} />
           <p className='greeting'>Hello, <b>{username}</b></p>
           {todos.map((todo) => <ListItem key={todo.id} todo={todo} getData={getData} />)}
         </>}

@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  postgres:
+    container_name: postgres-database
+    image: postgres
+    ports:
+      - 5432:5432
+#    command: ["psql", "-U", "postgres", "-f", "/root/todolist.sql"]
+#    command: bash -c "psql -U postgres -f /root/todolist.sql && tail -F /dev/null"
+    volumes:
+      - ./todolist.sql:/root/todolist.sql
+    environment:
+      POSTGRES_PASSWORD: postgres

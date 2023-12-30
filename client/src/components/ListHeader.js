@@ -1,14 +1,14 @@
 import { useState } from "react";
 import Modal from "./Modal";
 
-export default function ListHeader({ listName, getData }) {
+export default function ListHeader({ listName, getData, setTodos }) {
   const [showModal, setShowModal] = useState(false);
 
   const signOut = () => {
     localStorage.removeItem("username");
     localStorage.removeItem("authToken");
     localStorage.removeItem("token");
-    getData(); // window.location.reload(); // TODO: this approch is problematic when token expired
+    setTodos([]);
   }
 
   return (

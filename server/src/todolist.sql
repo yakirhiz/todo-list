@@ -1,4 +1,7 @@
+DROP DATABASE IF EXISTS todolist;
 CREATE DATABASE todolist;
+
+\c todolist
 
 CREATE TABLE users (
     username VARCHAR(255) PRIMARY KEY /* NOT NULL & UNIQUE */,
@@ -12,6 +15,7 @@ CREATE TABLE todos (
     progress INT
 );
 
+/*
 SELECT * FROM users WHERE username = 'user';
 INSERT INTO users (username, hashed_password) VALUES ('user', 'hashed_pass');
 
@@ -23,3 +27,4 @@ DELETE FROM todos WHERE id = 1;
 DROP TABLE users;
 DROP TABLE todos;
 DROP DATABASE todolist;
+*/

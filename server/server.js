@@ -4,11 +4,6 @@ const app = express();
 const cors = require('cors');
 require('dotenv').config();
 
-/**
- * TODOS:
- * 1. Commit to github & deploy to AWS
- */
-
 /* DEBUG - Print request and time to console */
 app.use((req, res, next) => {
     console.log(`${req.method} ${req.url}`);
@@ -39,4 +34,6 @@ app.use('/todos', require('./src/routes/todoRoute'));
 //     });
 // })
 
-app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
+const PORT = process.env.PORT ?? 8000;
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
