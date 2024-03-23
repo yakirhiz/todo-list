@@ -14,6 +14,7 @@ export default function Auth({ getData }) {
   };
 
   const handleSubmit = async (e, endpoint) => {
+    console.log("Sending auth request...");
     e.preventDefault();
     
     if (endpoint === 'signup' && password !== confirmPassword) {
