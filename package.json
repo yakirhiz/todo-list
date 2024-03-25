@@ -5,11 +5,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "if-env TYPE=server && (cd server && npm install) || (cd client && npm install)",
-    "server": "node ./server/server.js",
-    "client": "cd client && npm start",
-    "client2": "npm start --prefix client"
+    "server": "npm start --prefix server/",
+    "client": "npm start --prefix client/",
+    "database": "docker compose -f ./server/src/docker-compose.yaml -p database up -d"
   },
-  "author": "",
+  "author": "Yakir Hizkiyahu",
   "license": "ISC",
   "dependencies": {
     "if-env": "^1.0.4"

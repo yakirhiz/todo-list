@@ -2,15 +2,15 @@ const path = require('path');
 const express = require('express');
 const app = express();
 const cors = require('cors');
-require('dotenv').config();
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 /* DEBUG - Print request and time to console */
 app.use((req, res, next) => {
     console.log(`${req.method} ${req.url}`);
     next();
 }, (req, res, next) => {
-    console.log(`Time: ${new Date(Date.now()).toString()}`)
-    next()
+    console.log(`Time: ${new Date(Date.now()).toString()}`);
+    next();
 })
 
 app.use(cors());
