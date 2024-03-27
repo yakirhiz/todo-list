@@ -22,12 +22,12 @@ export default function Modal({ mode, setShowModal, getData, todo }) {
         body: JSON.stringify(data)
       });
 
-      if (res.status === 200) {
-        setShowModal(false);
-        getData();
-      } else {
-        throw new Error(`status is ${res.status}`);
+      if (!res.ok) {
+        throw new Error("Failed to post data");
       }
+
+      setShowModal(false);
+      getData();
     } catch (err) {
       console.log(err);
     }
@@ -45,12 +45,12 @@ export default function Modal({ mode, setShowModal, getData, todo }) {
         body: JSON.stringify(data)
       });
 
-      if (res.status === 200) {
-        setShowModal(false);
-        getData();
-      } else {
-        throw new Error(`status is ${res.status}`);
+      if (!res.ok) {
+        throw new Error("Failed to post data");
       }
+      
+      setShowModal(false);
+      getData();
     } catch (err) {
       console.log(err);
     }

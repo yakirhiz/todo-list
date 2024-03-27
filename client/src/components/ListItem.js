@@ -15,11 +15,11 @@ export default function ListItem({todo, getData}) {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      if (res.status === 200) {
-        getData();
-      } else {
-        console.log(`Response status is not 200`)
+      if (!res.ok) {
+        throw new Error("Failed to delete data");
       }
+      
+      getData();
     } catch (err) {
       console.log(err);
     }

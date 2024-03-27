@@ -29,6 +29,7 @@ router.get('/:username', authenticate, async (req, res) => {
         res.json(ret.rows);
     } catch (err) {
         console.log(err);
+        res.status(500).send("Internal Server Error");
     }
 })
 
@@ -38,9 +39,10 @@ router.post('/', authenticate, async (req, res) => {
     try {
         const query = 'INSERT INTO todos (username, title, progress) VALUES ($1, $2, $3) RETURNING *';
         const ret = await pool.query(query, [username, title, progress]);
-        res.json(ret.rows[0]);
+        res.status(201).json(ret.rows[0]);
     } catch (err) {
         console.log(err);
+        res.status(500).send("Internal Server Error");
     }
 })
 
@@ -54,6 +56,7 @@ router.put('/:id', authenticate, async (req, res) => {
         res.json(ret.rows[0]);
     } catch (err) {
         console.log(err);
+        res.status(500).send("Internal Server Error");
     }
 })
 
@@ -66,6 +69,7 @@ router.delete('/:id', authenticate, async (req, res) => {
         res.json(ret.rows[0]);
     } catch (err) {
         console.log(err);
+        res.status(500).send("Internal Server Error");
     }
 })
 

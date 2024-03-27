@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 export default function Auth({ getData }) {
   const [isLogIn, setIsLogIn] = useState(true);
-  const [username, setUsername] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [confirmPassword, setConfirmPassword] = useState(null);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
 
   const viewLogin = (status) => {
@@ -52,7 +52,7 @@ export default function Auth({ getData }) {
       <div className="auth-container-box">
         <form>
           <h2>{isLogIn ? 'Please log in' : 'Please sign up'}</h2>
-          <input type="username" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
+          <input type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
           <input type="password" placeholder="Password"  onChange={(e) => setPassword(e.target.value)} />
           {!isLogIn &&  <input type="password" placeholder="Confirm password"  onChange={(e) => setConfirmPassword(e.target.value)} />}
           <input type="submit" className="create" onClick={(e) => handleSubmit(e, isLogIn ? 'login' : 'signup')} />

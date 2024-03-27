@@ -26,6 +26,11 @@ export default function App() {
       const res = await fetch(`http://localhost:8000/todos/${username}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      
       const json = await res.json();
       console.log(json) // DEBUG - Print return todos to console
       setTodos(json);
@@ -34,9 +39,9 @@ export default function App() {
     }
   }
 
-  // Called once when the page is reloading
+  // Called once when the page is reloading (or first component rendering)
   useEffect(() => {
-    console.log("Effecting...");
+    console.log("<Effecting... >");
 
     if (authToken) {
       getData();
@@ -47,6 +52,7 @@ export default function App() {
 
   return (
     <div className="app">
+      {/* <AuthFirebase getDataFirebase={getDataFirebase} /> */}
       {!authToken && <Auth getData={getData} />}
       {authToken &&
         <>
