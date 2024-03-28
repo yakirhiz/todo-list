@@ -8,7 +8,7 @@ export const getTodos = async (username, token) => {
     });
     
     if (!res.ok) {
-      throw new Error("Failed to fetch data");
+      throw new Error("[Node] Failed to fetch data");
     }
     
     return await res.json();
@@ -27,7 +27,7 @@ export const postTodo = async (data, token) => {
     });
 
     if (!res.ok) {
-      throw new Error("Failed to post data");
+      throw new Error("[Node] Failed to post data");
     }
 
     return await res.json();
@@ -46,7 +46,7 @@ export const updateTodo = async (todoId, data, token) => {
     });
 
     if (!res.ok) {
-      throw new Error("Failed to post data");
+      throw new Error("[Node] Failed to update data");
     }
     
     return await res.json();
@@ -64,7 +64,7 @@ export const deleteTodo = async (todoId, token) => {
     });
 
     if (!res.ok) {
-      throw new Error("Failed to delete data");
+      throw new Error("[Node] Failed to delete data");
     }
     
     return await res.json();

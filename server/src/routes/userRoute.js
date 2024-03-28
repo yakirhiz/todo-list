@@ -17,7 +17,7 @@ router.post('/signup', async (req, res) => {
         const token = generateToken(username);
         res.status(201).json({ username, token });
     } catch (err) {
-        res.json({ error: err.detail }); // NOTE: Forward error (not safe)
+        res.status(500).json({ error: err.detail }); // NOTE: Forward error (not safe)
     }
 });
 
@@ -30,14 +30,13 @@ router.post('/login', async (req, res) => {
         const users = await pool.query(query, [username]);
 
         if (users.rows.length < 1) {
-            res.json({ error: `A user named '${username}' does not exist.` });
+            res.status(404).json({ error: `A user named '${username}' does not exist.` });
         } else if (!(await bcrypt.compare(password, users.rows[0].hashed_password))) {
-            res.status(403).json({ error: `Password is incorrect.` });
+            res.status(401).json({ error: `Password is incorrect.` });
         } else {
             const token = generateToken(username);
             res.json({ username, token });
         }
-
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: `Internal server error.` });

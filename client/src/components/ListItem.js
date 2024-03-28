@@ -2,7 +2,7 @@ import { useState } from "react";
 import TickIcon from './TickIcon';
 import Modal from "./Modal";
 import ProgressBar from './ProgressBar';
-import { deleteTodo } from '../todosApi';
+import { deleteTodo } from '../services/todosApi';
 
 export default function ListItem({todo, getData}) {
   const [showModal, setShowModal] = useState(false);

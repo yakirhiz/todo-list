@@ -2,7 +2,9 @@ import Auth from './components/Auth';
 import ListHeader from './components/ListHeader';
 import ListItem from './components/ListItem';
 import { useEffect, useState } from "react";
-import { getTodos } from './todosApi';
+import { getTodos } from './services/todosApi';
+import Router from './Router';
+import AuthFirebaseGoogle from './components/firebase/AuthFirebaseGoogle';
 
 export default function App() {
   console.log("Rendering <App> component...");
@@ -10,9 +12,9 @@ export default function App() {
   // TODO: maybe use state for both + localStorage
   const username = localStorage.getItem("username");
   const authToken = localStorage.getItem("authToken");
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
 
-  const [userRender, setUserRender] = useState(false); // can be in the dependency array
+  // const [userRender, setUserRender] = useState(false); // can be in the dependency array
 
   // useState initialize the variable only once
   const [todos, setTodos] = useState([]);
@@ -44,6 +46,7 @@ export default function App() {
   return (
     <div className="app">
       {/* <AuthFirebase getDataFirebase={getDataFirebase} /> */}
+      {/* <AuthFirebaseGoogle getData={getData} /> */}
       {!authToken && <Auth getData={getData} />}
       {authToken &&
         <>

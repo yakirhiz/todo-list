@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { postTodo, updateTodo } from '../todosApi';
+import { postTodo, updateTodo } from '../services/todosApi';
 
 export default function Modal({ mode, setShowModal, getData, todo }) {
   const username = localStorage.getItem("username");
