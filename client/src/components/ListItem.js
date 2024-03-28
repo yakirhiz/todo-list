@@ -2,6 +2,7 @@ import { useState } from "react";
 import TickIcon from './TickIcon';
 import Modal from "./Modal";
 import ProgressBar from './ProgressBar';
+import { deleteTodo } from '../todosApi';
 
 export default function ListItem({todo, getData}) {
   const [showModal, setShowModal] = useState(false);
@@ -10,15 +11,7 @@ export default function ListItem({todo, getData}) {
     const token = localStorage.getItem("token");
     
     try {
-      const res = await fetch(`http://localhost:8000/todos/${todo.id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to delete data");
-      }
-      
+      await deleteTodo(todo.id, token);
       getData();
     } catch (err) {
       console.log(err);

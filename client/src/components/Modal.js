@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { postTodo, updateTodo } from '../todosApi';
 
 export default function Modal({ mode, setShowModal, getData, todo }) {
   const username = localStorage.getItem("username");
@@ -16,16 +17,7 @@ export default function Modal({ mode, setShowModal, getData, todo }) {
     const token = localStorage.getItem("token");
 
     try {
-      const res = await fetch('http://localhost:8000/todos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify(data)
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to post data");
-      }
-
+      await postTodo(data, token);
       setShowModal(false);
       getData();
     } catch (err) {
@@ -39,16 +31,7 @@ export default function Modal({ mode, setShowModal, getData, todo }) {
     const token = localStorage.getItem("token");
 
     try {
-      const res = await fetch(`http://localhost:8000/todos/${todo.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify(data)
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to post data");
-      }
-      
+      await updateTodo(todo.id, data, token);
       setShowModal(false);
       getData();
     } catch (err) {

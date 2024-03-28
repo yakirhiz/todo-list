@@ -2,6 +2,7 @@ import Auth from './components/Auth';
 import ListHeader from './components/ListHeader';
 import ListItem from './components/ListItem';
 import { useEffect, useState } from "react";
+import { getTodos } from './todosApi';
 
 export default function App() {
   console.log("Rendering <App> component...");
@@ -18,22 +19,12 @@ export default function App() {
 
   const getData = async () => {
     const username = localStorage.getItem("username");
-    const authToken = localStorage.getItem("authToken");
     const token = localStorage.getItem("token");
     console.log(`Fetching data for @${username}`);
 
     try {
-      const res = await fetch(`http://localhost:8000/todos/${username}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      
-      if (!res.ok) {
-        throw new Error("Failed to fetch data");
-      }
-      
-      const json = await res.json();
-      console.log(json) // DEBUG - Print return todos to console
-      setTodos(json);
+      const todos = await getTodos(username, token);
+      setTodos(todos);
     } catch (err) {
       console.log(err);
     }
