@@ -3,8 +3,6 @@ import ListHeader from './components/ListHeader';
 import ListItem from './components/ListItem';
 import { useEffect, useState } from "react";
 import { getTodos } from './services/todosApi';
-import Router from './Router';
-import AuthFirebaseGoogle from './components/firebase/AuthFirebaseGoogle';
 
 export default function App() {
   console.log("Rendering <App> component...");
@@ -34,7 +32,7 @@ export default function App() {
 
   // Called once when the page is reloading (or first component rendering)
   useEffect(() => {
-    console.log("<Effecting... >");
+    console.log("<Effecting...>");
 
     if (authToken) {
       getData();
@@ -45,8 +43,6 @@ export default function App() {
 
   return (
     <div className="app">
-      {/* <AuthFirebase getDataFirebase={getDataFirebase} /> */}
-      {/* <AuthFirebaseGoogle getData={getData} /> */}
       {!authToken && <Auth getData={getData} />}
       {authToken &&
         <>
