@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+const router = require("./routes.js");
 
 /* DEBUG - Print request and time to console */
 app.use((req, res, next) => {
@@ -15,10 +16,7 @@ app.use((req, res, next) => {
 
 app.use(cors());
 app.use(express.json());
-
-/* Routing */
-app.use('/users', require('./routes/userRoute'));
-app.use('/todos', require('./routes/todoRoute'));
+app.use(router);
 
 /* Serve frontend (v1) */
 // app.use(express.static(path.join(__dirname, '../../client/build')));

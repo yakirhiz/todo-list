@@ -12,8 +12,6 @@ const authenticate = async (req, res, next) => {
 
     try {
         const decode = jwt.verify(token, process.env.JWT_SECRET);
-        console.log(`Handle GET request from ${decode.username}`);
-
         next();
     } catch (e) {
         res.sendStatus(401);
