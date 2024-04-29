@@ -1,24 +1,6 @@
-const router = require('express').Router();
 const pool = require('../db');
-const jwt = require('jsonwebtoken');
 
-const authenticate = async (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-
-    if (!authHeader || !authHeader.startsWith('Bearer'))
-        return res.sendStatus(401);
-
-    const token = authHeader.split(' ')[1];
-
-    try {
-        const decode = jwt.verify(token, process.env.JWT_SECRET);
-        next();
-    } catch (e) {
-        res.sendStatus(401);
-    }
-}
-
-router.get('/:username', authenticate, async (req, res) => {
+const getTodos = async (req, res) => {
     const { username } = req.params;
 
     try {
@@ -29,9 +11,9 @@ router.get('/:username', authenticate, async (req, res) => {
         console.log(err);
         res.status(500).send("Internal Server Error");
     }
-})
+};
 
-router.post('/', authenticate, async (req, res) => {
+const createTodo = async (req, res) => {
     const { username, title, progress } = req.body;
 
     try {
@@ -42,9 +24,9 @@ router.post('/', authenticate, async (req, res) => {
         console.log(err);
         res.status(500).send("Internal Server Error");
     }
-})
+};
 
-router.put('/:id', authenticate, async (req, res) => {
+const updateTodo = async (req, res) => {
     const { id } = req.params;
     const { username, title, progress } = req.body;
 
@@ -56,9 +38,9 @@ router.put('/:id', authenticate, async (req, res) => {
         console.log(err);
         res.status(500).send("Internal Server Error");
     }
-})
+};
 
-router.delete('/:id', authenticate, async (req, res) => {
+const deleteTodo = async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -69,6 +51,6 @@ router.delete('/:id', authenticate, async (req, res) => {
         console.log(err);
         res.status(500).send("Internal Server Error");
     }
-})
+};
 
-module.exports = router;
+module.exports = { getTodos, createTodo, updateTodo, deleteTodo };

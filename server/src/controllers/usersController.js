@@ -1,10 +1,9 @@
-const router = require('express').Router();
 const pool = require('../db');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 /* Sign up */
-router.post('/signup', async (req, res) => {
+const signup = async (req, res) => {
     const { username, password } = req.body;
 
     const salt = bcrypt.genSaltSync(10);
@@ -19,10 +18,10 @@ router.post('/signup', async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.detail }); // NOTE: Forward error (not safe)
     }
-});
+};
 
 /* Login */
-router.post('/login', async (req, res) => {
+const login = async (req, res) => {
     const { username, password } = req.body;
 
     try {
@@ -41,10 +40,10 @@ router.post('/login', async (req, res) => {
         console.log(err);
         res.status(500).json({ error: `Internal server error.` });
     }
-});
+};
 
 const generateToken = (username) => {
     return jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '1hr' });
 }
 
-module.exports = router;
+module.exports = { signup, login };
