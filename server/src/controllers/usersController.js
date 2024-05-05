@@ -1,5 +1,5 @@
 const pool = require('../db');
-const jwt = require('jsonwebtoken');
+const { generateToken } = require('../auth');
 const bcrypt = require('bcrypt');
 
 /* Sign up */
@@ -42,8 +42,26 @@ const login = async (req, res) => {
     }
 };
 
-const generateToken = (username) => {
-    return jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '1hr' });
-}
+/* Update user */
+
+/* Delete user */
+const deleteUser = async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const query = 'DELETE FROM users WHERE username = $1 RETURNING *';
+        const users = await pool.query(query, [username]);
+
+        if (users.rows.length < 1) {
+            res.status(404).json({ error: `Deletion failed: a user named '${username}' does not exist.` });
+        } else {
+            const token = generateToken(username);
+            res.json(ret.rows[0]);
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: `Internal server error.` });
+    }
+};
 
 module.exports = { signup, login };

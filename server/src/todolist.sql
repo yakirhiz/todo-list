@@ -3,12 +3,12 @@ CREATE DATABASE todolist;
 
 \c todolist
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(255) PRIMARY KEY /* NOT NULL & UNIQUE */,
     hashed_password VARCHAR(255)
 );
 
-CREATE TABLE todos (
+CREATE TABLE IF NOT EXISTS todos (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     username VARCHAR(255) REFERENCES users(username),
     title VARCHAR(255),
