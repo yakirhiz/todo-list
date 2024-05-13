@@ -3,6 +3,7 @@ import ListHeader from './components/ListHeader';
 import ListItem from './components/ListItem';
 import { useEffect, useState } from "react";
 import { getTodos } from './services/todosApi';
+import List from './components/List';
 
 export default function App() {
   console.log("Rendering <App> component...");
@@ -46,9 +47,9 @@ export default function App() {
       {!authToken && <Auth getData={getData} />}
       {authToken &&
         <>
-          <ListHeader listName={'🔥Todolist'} getData={getData} setTodos={setTodos} />
+          <ListHeader listName={'🔥 Todolist'} getData={getData} setTodos={setTodos} />
           <p className='greeting'>Hello, <b>{username}</b></p>
-          {todos.map((todo) => <ListItem key={todo.id} todo={todo} getData={getData} />)}
+          <List todos={todos} getData={getData} />
         </>}
       <p className='copyright'>Yakir Hizkiyahu</p>
     </div>
