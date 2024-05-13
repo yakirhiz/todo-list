@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { login, signup } from '../services/usersApi';
 
 export default function Auth({ getData }) {
   const [isLogIn, setIsLogIn] = useState(true);
@@ -23,27 +24,21 @@ export default function Auth({ getData }) {
     }
 
     try {
-      const res = await fetch(`http://localhost:8000/users/${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({username, password})
-      });
-
-      const json = await res.json();
-      console.log(json)
-
-      if (json.error) {
-        setError(json.error);
+      let json;
+      
+      if (endpoint === 'signup') {
+        json = await signup(username, password);
       } else {
-        localStorage.setItem("username", username);
-        localStorage.setItem("authToken", true);
-        localStorage.setItem("token", json.token);
-        setError(null);
-        getData(); // window.location.reload();
+        json = await login(username, password);
       }
+
+      localStorage.setItem("username", username);
+      localStorage.setItem("authToken", true);
+      localStorage.setItem("token", json.token);
+      setError(null);
+      getData(); // window.location.reload();
     } catch (err) {
-      setError('Cannot reach the server!');
-      console.log(err);
+      setError(err.message)
     }
   }
 

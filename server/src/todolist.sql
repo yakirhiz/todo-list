@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS todos (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     username VARCHAR(255) REFERENCES users(username),
     title VARCHAR(255),
-    progress INT
+    progress INT CHECK (progress BETWEEN 0 AND 100)
 );
 
 /*
