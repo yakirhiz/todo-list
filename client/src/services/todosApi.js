@@ -8,7 +8,11 @@ export const getTodos = async (username, token) => {
     });
     
     if (!res.ok) {
-      throw new Error("[Node] Failed to fetch data");
+      const response = await res.json();
+      if (response.error) {
+        throw new Error(response.error);
+      }
+      throw new Error("An unexpected error occurred!");
     }
     
     return await res.json();
@@ -27,7 +31,11 @@ export const postTodo = async (data, token) => {
     });
 
     if (!res.ok) {
-      throw new Error("[Node] Failed to post data");
+      const response = await res.json();
+      if (response.error) {
+        throw new Error(response.error);
+      }
+      throw new Error("An unexpected error occurred!");
     }
 
     return await res.json();
@@ -46,7 +54,11 @@ export const updateTodo = async (todoId, data, token) => {
     });
 
     if (!res.ok) {
-      throw new Error("[Node] Failed to update data");
+      const response = await res.json();
+      if (response.error) {
+        throw new Error(response.error);
+      }
+      throw new Error("An unexpected error occurred!");
     }
     
     return await res.json();
@@ -64,7 +76,11 @@ export const deleteTodo = async (todoId, token) => {
     });
 
     if (!res.ok) {
-      throw new Error("[Node] Failed to delete data");
+      const response = await res.json();
+      if (response.error) {
+        throw new Error(response.error);
+      }
+      throw new Error("An unexpected error occurred!");
     }
     
     return await res.json();

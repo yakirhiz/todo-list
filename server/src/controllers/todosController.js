@@ -9,7 +9,7 @@ const getTodos = async (req, res) => {
         res.json(ret.rows);
     } catch (err) {
         console.log(err);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({ error: `Internal server error.` });
     }
 };
 
@@ -22,7 +22,7 @@ const createTodo = async (req, res) => {
         res.status(201).json(ret.rows[0]);
     } catch (err) {
         console.log(err);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({ error: `Internal server error.` });
     }
 };
 
@@ -36,7 +36,7 @@ const updateTodo = async (req, res) => {
         res.json(ret.rows[0]);
     } catch (err) {
         console.log(err);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({ error: `Internal server error.` });
     }
 };
 
@@ -49,7 +49,7 @@ const deleteTodo = async (req, res) => {
         res.json(ret.rows[0]);
     } catch (err) {
         console.log(err);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({ error: `Internal server error.` });
     }
 };
 
