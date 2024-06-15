@@ -1,18 +1,20 @@
 const jwt = require('jsonwebtoken');
 
 const authenticate = async (req, res, next) => {
+    // Need to check that user exists in the database
     const authHeader = req.headers['authorization'];
 
     if (!authHeader || !authHeader.startsWith('Bearer'))
-        return res.sendStatus(401);
+        return res.status(401).json({ error: `Authorization header missing or invalid.` });
 
     const token = authHeader.split(' ')[1];
 
     try {
-        const decode = jwt.verify(token, process.env.JWT_SECRET);
+        const decode = jwt.verify(token, process.env.JWT_SECRET); // decode func vs verify func
+        // Need to verify with username (from req)
         next();
     } catch (e) {
-        res.sendStatus(401);
+        res.status(401).json({ error: `Invalid token.` });
     }
 };
 
