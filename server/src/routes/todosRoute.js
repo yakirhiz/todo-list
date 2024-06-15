@@ -7,7 +7,7 @@ const {
     createTodo,
     updateTodo,
     deleteTodo
-} = require("../controllers/todosController");
+} = require("../controllers/todosControllerInMemory");
 
 router.use('/', (req, res, next) => {
     console.log(`Handling todo request...`);

@@ -1,4 +1,3 @@
-const pool = require('../db');
 const Todo = require('./models/Todo.js');
 
 const getTodos = async (req, res) => {

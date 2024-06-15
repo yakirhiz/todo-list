@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { signup, login } = require('../controllers/usersController')
+const { signup, login } = require('../controllers/usersControllerInMemory')
 
 router.use('/', (req, res, next) => {
     console.log(`Handling user request...`);

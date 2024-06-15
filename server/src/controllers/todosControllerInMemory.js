@@ -1,8 +1,4 @@
-const todos = [
-    { id: 1, username: "john", title: "task1", progress: 50},
-    { id: 2, username: "john", title: "task2", progress: 0},
-    { id: 3, username: "ya", title: "task3", progress: 100},
-];
+let todos = [];
 
 let CURRENT_ID = todos.length; // hold the next id to insert to table
 
@@ -30,27 +26,27 @@ const updateTodo = async (req, res) => {
     const { id } = req.params;
     const { username, title, progress } = req.body;
 
-    try {
-        const query = 'UPDATE todos SET (title, progress) = ($1, $2) WHERE id = $3 RETURNING *';
-        const ret = await pool.query(query, [title, progress, id]);
-        res.json(ret.rows[0]);
-    } catch (err) {
-        console.log(err);
-        res.status(500).send("Internal Server Error");
-    }
+    todos.map(
+        todo => todo.id === id ? { id, username, title, progress } : todo
+    )
+
+    const updatedIndex = todos.findIndex(todo => todo.id === id)
+
+    res.status(200).json(todos[updatedIndex]); // later no need value
 };
 
 const deleteTodo = async (req, res) => {
     const { id } = req.params;
 
-    try {
-        const query = 'DELETE FROM todos WHERE id = $1 RETURNING *';
-        const ret = await pool.query(query, [id]);
-        res.json(ret.rows[0]);
-    } catch (err) {
-        console.log(err);
-        res.status(500).send("Internal Server Error");
-    }
+    const deletedIndex = todos.findIndex(todo => todo.id === id)
+
+    const result = todos[deletedIndex];
+
+    todos = todos.filter(
+        todo => todo.id !== id
+    )
+
+    res.status(200).json(result); // later no need value
 };
 
 module.exports = { getTodos, createTodo, updateTodo, deleteTodo };

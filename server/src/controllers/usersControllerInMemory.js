@@ -3,10 +3,7 @@ const bcrypt = require('bcrypt');
 
 // TODO: Build error handling in these routes
 
-const users = {
-    "john": { hashedPassword: "123" },
-    "jane": { hashedPassword: "123" }
-}
+const users = {}
 
 /* Sign up */
 const signup = async (req, res, next) => {
@@ -47,16 +44,16 @@ const login = async (req, res) => {
 /* Update user */
 
 /* Delete user */
-const deleteUser = async (req, res) => {
-    const { username, password } = req.body;
+// const deleteUser = async (req, res) => {
+//     const { username, password } = req.body;
 
-    if (!(username in users)) {
-        return res.status(404).json({ error: `A user named '${username}' does not exist.` });
-    }
+//     if (!(username in users)) {
+//         return res.status(404).json({ error: `A user named '${username}' does not exist.` });
+//     }
 
-    delete users[username];
-    console.log(users);
-    res.sendStatus(204);
-};
+//     delete users[username];
+//     console.log(users);
+//     res.sendStatus(204);
+// };
 
-module.exports = { signup, login, deleteUser };
+module.exports = { signup, login };
