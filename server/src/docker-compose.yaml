@@ -12,3 +12,18 @@ services:
       - ./todolist.sql:/root/todolist.sql
     environment:
       POSTGRES_PASSWORD: postgres
+  mongo:
+    container_name: mongo-database
+    image: mongo
+    ports:
+      - 27017:27017
+  mysql:
+    container_name: mysql-database
+    image: mysql
+    ports:
+      - 3306:3306
+#    command: mysql -u root -p getpartydb < /root/queries.sql
+    volumes:
+      - ./queries.sql:/root/queries.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234

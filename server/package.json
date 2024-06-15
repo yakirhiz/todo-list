@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Server",
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/server.js",
@@ -18,6 +18,8 @@
     "dotenv": "^16.1.4",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
+    "mongodb": "^6.6.1",
+    "mongoose": "^8.4.0",
     "nodemon": "^2.0.22",
     "pg": "^8.11.0",
     "uuid": "^9.0.0"
