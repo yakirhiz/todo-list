@@ -51,5 +51,6 @@ app.use(
 // })
 
 const PORT = process.env.PORT ?? 8000;
+const INTERFACE = process.env.INTERFACE ?? "0.0.0.0";
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, INTERFACE, () => console.log(`Server running on port ${PORT}`));
