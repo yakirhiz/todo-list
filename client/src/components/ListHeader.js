@@ -1,14 +1,14 @@
 import { useState } from "react";
 import Modal from "./Modal";
 
-export default function ListHeader({ listName, getData, setTodos }) {
+export default function ListHeader({ listName, getData, setAuthenticated }) {
   const [showModal, setShowModal] = useState(false);
 
   const signOut = () => {
     localStorage.removeItem("username");
     localStorage.removeItem("authToken");
     localStorage.removeItem("token");
-    setTodos([]);
+    setAuthenticated(false);
   }
 
   return (

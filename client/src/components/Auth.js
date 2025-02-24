@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { login, signup } from '../services/usersApi';
 
-export default function Auth({ getData }) {
+export default function Auth({ setAuthenticated }) {
   const [isLogIn, setIsLogIn] = useState(true);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -18,25 +18,26 @@ export default function Auth({ getData }) {
     console.log("Sending auth request...");
     e.preventDefault();
     
+    if (!username || !password) {
+      setError('Username and password cannot be empty!');
+      return;
+    }
+    
     if (endpoint === 'signup' && password !== confirmPassword) {
       setError('Make sure passwords match!');
       return;
     }
 
     try {
-      let json;
-      
-      if (endpoint === 'signup') {
-        json = await signup(username, password);
-      } else {
-        json = await login(username, password);
-      }
+      const json = (endpoint === 'signup') ?
+        await signup(username, password) :
+        await login(username, password);
 
       localStorage.setItem("username", username);
       localStorage.setItem("authToken", true);
       localStorage.setItem("token", json.token);
       setError(null);
-      getData(); // window.location.reload();
+      setAuthenticated(true); // window.location.reload();
     } catch (err) {
       setError(err.message)
     }
