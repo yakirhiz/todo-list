@@ -7,10 +7,14 @@ export default function Auth({ setAuthenticated }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const viewLogin = (status) => {
     setError(null);
     setIsLogIn(status);
+    setUsername("");
+    setPassword("");
+    setConfirmPassword("");
     console.log(`isLogIn is set to ${status}`);
   };
 
@@ -28,6 +32,8 @@ export default function Auth({ setAuthenticated }) {
       return;
     }
 
+    setIsLoading(true);
+
     try {
       const json = (endpoint === 'signup') ?
         await signup(username, password) :
@@ -40,18 +46,41 @@ export default function Auth({ setAuthenticated }) {
       setAuthenticated(true); // window.location.reload();
     } catch (err) {
       setError(err.message)
+    } finally {
+      setIsLoading(false);
     }
   }
 
   return (
     <div className="auth-container">
       <div className="auth-container-box">
-        <form>
+        <form onSubmit={(e) => handleSubmit(e, isLogIn ? 'login' : 'signup')} >
           <h2>{isLogIn ? 'Please log in' : 'Please sign up'}</h2>
-          <input type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
-          <input type="password" placeholder="Password"  onChange={(e) => setPassword(e.target.value)} />
-          {!isLogIn &&  <input type="password" placeholder="Confirm password"  onChange={(e) => setConfirmPassword(e.target.value)} />}
-          <input type="submit" className="create" onClick={(e) => handleSubmit(e, isLogIn ? 'login' : 'signup')} />
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            disabled={isLoading}
+            maxlength="25"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={isLoading}
+          />
+          {!isLogIn && (
+            <input
+              type="password"
+              placeholder="Confirm password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              disabled={isLoading}
+            />
+          )}
+          <input type="submit" className="create" disabled={isLoading} />
           {error && <p style={{color:"red"}}>{error}</p>}
         </form>
         <div className='auth-options'>
