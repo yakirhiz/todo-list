@@ -1,9 +1,10 @@
 const path = require('path');
 const express = require('express');
 const app = express();
-const cors = require('./cors');
+const cors = require('./middlewares/cors');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
-const router = require("./router.js");
+const router = require("./middlewares/router.js");
+const errorHandler = require("./middlewares/error.js");
 
 /* DEBUG - Print request and time to console */
 app.use((req, res, next) => {
@@ -17,25 +18,13 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json());
 app.use(router);
-
-// Error Handler Middleware (Last middleware to use)
-app.use(
-    function errorHandler(err, req, res, next) {
-        if (res.headersSent) {
-            return next(err)
-        }
-
-        console.error("[ERROR OCCURED] Triggering error handler...");
-        console.error(err.message);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-);
+app.use(errorHandler); // Error Handler Middleware (Last middleware to use)
 
 // const mongoose = require('mongoose');
 // mongoose.connect('mongodb://localhost:27017/users')
 //     .then(() => console.log('Connected to mongoDB!'))
 //     .catch((e) => console.log(e));
-
+ 
 /* Serve frontend (v1) */
 // app.use(express.static(path.join(__dirname, '../../client/build')));
 

@@ -1,6 +1,6 @@
 const cors = require('cors');
 
-const whitelist = ['http://localhost:3000']; // authorized origins
+const whitelist = ['http://localhost:3000', 'http://localhost:8000', 'http://127.0.0.1:5500/']; // authorized origins
 
 const corsOptions = {
     origin: function (origin, callback) {
