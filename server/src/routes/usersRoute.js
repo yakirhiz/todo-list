@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const { authenticate } = require('../auth');
 
-const { signup, login } = require('../controllers/usersControllerInMemory')
+const { signup, login, updateUser, deleteUser } = require('../controllers/usersControllerInMemory')
 
 router.use('/', (req, res, next) => {
     console.log(`Handling user request...`);
@@ -10,7 +11,7 @@ router.use('/', (req, res, next) => {
 
 router.post('/signup', signup);
 router.post('/login', login);
-// router.put('/:id', updateUser);
-// router.delete('/:id', deleteUser);
+router.put('/:id', authenticate, updateUser);
+router.delete('/:id', authenticate, deleteUser);
 
 module.exports = router;
