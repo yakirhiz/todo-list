@@ -1,22 +1,29 @@
 const pool = require('../db');
-const { generateToken } = require('../auth');
+const { generateToken, verifyPassword, hashPassword } = require('../auth');
 const bcrypt = require('bcrypt');
 
 /* Sign up */
 const signup = async (req, res) => {
     const { username, password } = req.body;
 
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(password, salt);
+    const hashedPassword = await hashPassword(password);
 
     try {
+        const checkQuery = 'SELECT * FROM users WHERE username = $1';
+        const { rowCount } = await pool.query(checkQuery, [username]);
+
+        if (rowCount > 0) {
+            return res.status(409).json({ error: `A user named '${username}' already exists.` });
+        }
+
         const query = 'INSERT INTO users (username, hashed_password) VALUES ($1, $2) RETURNING *';
         await pool.query(query, [username, hashedPassword]);
 
-        const token = generateToken(username);
+        const token = generateToken(username); // You might want to use insertResult.rows[0].id here
         res.status(201).json({ username, token });
     } catch (err) {
-        res.status(500).json({ error: err.detail }); // NOTE: Forward error (not safe)
+        console.log(err);
+        res.status(500).json({ error: `Internal server error.` });
     }
 };
 
@@ -26,16 +33,18 @@ const login = async (req, res) => {
 
     try {
         const query = 'SELECT * FROM users WHERE username = $1';
-        const users = await pool.query(query, [username]);
+        const { rows, rowCount } = await pool.query(query, [username]);
 
-        if (users.rows.length < 1) {
-            res.status(404).json({ error: `A user named '${username}' does not exist.` });
-        } else if (!(await bcrypt.compare(password, users.rows[0].hashed_password))) {
-            res.status(401).json({ error: `Password is incorrect.` });
-        } else {
-            const token = generateToken(username);
-            res.json({ username, token });
+        if (rowCount === 0) {
+            return res.status(404).json({ error: `A user named '${username}' does not exist.` });
         }
+
+        if (!(await verifyPassword(password, rows[0].hashed_password))) {
+            return res.status(401).json({ error: `Password is incorrect.` });
+        }
+
+        const token = generateToken(username);
+        res.status(200).json({ username, token });
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: `Internal server error.` });
@@ -64,22 +73,26 @@ const updateUser = async (req, res) => {
 
 /* Delete user */
 const deleteUser = async (req, res) => {
-    res.status(500).json({ error: `Delete user` });
-    // const { username, password } = req.body;
+    const { id: username } = req.params;
 
-    // try {
-    //     const query = 'DELETE FROM users WHERE username = $1 RETURNING *';
-    //     const users = await pool.query(query, [username]);
+    // Ensure the user is attempting to delete themselves
+    if (username !== req.user.username) {
+        return res.status(403).json({ error: `You cannot delete other users.` });
+    }
 
-    //     if (users.rows.length < 1) {
-    //         res.status(404).json({ error: `Deletion failed: a user named '${username}' does not exist.` });
-    //     } else {
-    //         res.json(ret.rows[0]); // return 204 'No content'
-    //     }
-    // } catch (err) {
-    //     console.log(err);
-    //     res.status(500).json({ error: `Internal server error.` });
-    // }
+    try {
+        const query = 'DELETE FROM users WHERE username = $1 RETURNING *';
+        const { rows, rowCount } = await pool.query(query, [username]);
+
+        if (rowCount === 0) {
+            return res.status(404).json({ error: `A user named '${username}' does not exist.` });
+        }
+
+        res.status(200).json(rows[0]);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: `Internal server error.` });
+    }
 };
 
 module.exports = { signup, login, updateUser, deleteUser };
