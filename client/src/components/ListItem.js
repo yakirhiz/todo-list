@@ -1,5 +1,5 @@
 import { useState } from "react";
-import TickIcon from './TickIcon';
+// import TickIcon from './TickIcon';
 import Modal from "./Modal";
 import ProgressBar from './ProgressBar';
 import { deleteTodo } from '../services/todosApi';
@@ -21,7 +21,7 @@ export default function ListItem({todo, getData}) {
   return (
     <li className="list-item">
       <div className="info-container">
-        <TickIcon />
+        {/* <TickIcon /> */}
         <p className="task-title">{todo.title}</p>
         <ProgressBar progress={todo.progress} />
       </div>

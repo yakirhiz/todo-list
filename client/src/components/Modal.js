@@ -11,8 +11,17 @@ export default function Modal({ mode, setShowModal, getData, todo }) {
     progress: editMode ? todo.progress : 0
   })
 
+  function isWhitespace(input) {
+    return input.trim() === '';
+  }
+
   const postData = async (e) => {
     e.preventDefault();
+
+    if (isWhitespace(data.title)) {
+      alert("title cannot be empty");
+      return;
+    }
 
     const token = localStorage.getItem("token");
 
@@ -50,16 +59,17 @@ export default function Modal({ mode, setShowModal, getData, todo }) {
       <div className="modal">
         <div className="form-title-container">
           <h3>Let's {mode} your task</h3>
-          <button onClick={() => setShowModal(false)}>X</button>
+          <button onClick={() => setShowModal(false)}>&times;</button>
         </div>
         <form>
           <input
             required
-            maxLength={30}
+            maxLength={255}
             placeholder="Your task goes here"
             name="title"
             value={data.title}
             onChange={handleChange}
+            autoFocus
           />
           <br />
           <label htmlFor="range">Drag to select you current progress</label>
