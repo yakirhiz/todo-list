@@ -1,52 +1,95 @@
 let todos = [];
-let CURRENT_ID = todos.length; // hold the next id to insert to table
+
+function createIdGenerator() {
+    let currentId = 0; // Private state for the ID counter
+    return function() {
+        return currentId++;
+    };
+}
+
+const generateId = createIdGenerator();
 
 const getTodos = async (req, res) => {
     const { username } = req.params;
 
-    const result = todos.filter((todo) => {
-        return todo.username === username;
-    });
+    if (username !== req.user.username) {
+        return res.status(403).json({ error: `Forbidden.` });
+    }
 
-    res.status(200).json(result);
+    try {
+        const result = todos.filter(todo => todo.username === username);
+
+        res.status(200).json(result);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: `Internal server error.` });
+    }
 };
 
 const createTodo = async (req, res) => {
     const { username, title, progress } = req.body;
 
-    todos.push({ id: CURRENT_ID++, username, title, progress });
+    if (username !== req.user.username) {
+        return res.status(403).json({ error: `Forbidden.` });
+    }
 
-    const insertedIndex = todos.findIndex(todo => todo.id === CURRENT_ID - 1);
-    // const insertedTodo = todos.at(-1);
+    try {
+        todos.push({ id: generateId(), username, title, progress });
 
-    res.status(201).json(todos[insertedIndex]); // later no need value
+        res.status(201).json(todos.at(-1));
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: `Internal server error.` });
+    }
 };
 
 const updateTodo = async (req, res) => {
     const { id } = req.params;
-    const { username, title, progress } = req.body;
+    const { title, progress } = req.body;
 
-    todos = todos.map(
-        todo => todo.id.toString() === id ? { ...todo, username, title, progress } : todo
-    )
-    
-    const updatedIndex = todos.findIndex(todo => todo.id.toString() === id)
+    try {
+        const updatedIndex = todos.findIndex(todo => todo.id.toString() === id);
 
-    res.status(200).json(todos[updatedIndex]); // later no need value
+        if (updatedIndex === -1) {
+            return res.status(404).json({ error: "Todo not found" });
+        }
+
+        // Check ownership
+        if (todos[updatedIndex].username !== req.user.username) {
+            return res.status(403).json({ error: "Forbidden" });
+        }
+
+        todos[updatedIndex] = { ...todos[updatedIndex], title, progress };
+
+        res.status(200).json(todos[updatedIndex]);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: `Internal server error.` });
+    }
 };
 
 const deleteTodo = async (req, res) => {
     const { id } = req.params;
 
-    const deletedIndex = todos.findIndex(todo => todo.id.toString() === id)
+    try {
+        const deletedIndex = todos.findIndex(todo => todo.id.toString() === id);
 
-    const result = todos[deletedIndex];
+        if (deletedIndex === -1) {
+            return res.status(404).json({ error: "Todo not found" });
+        }
 
-    todos = todos.filter(
-        todo => todo.id.toString() !== id
-    )
+        // Check ownership
+        if (todos[deletedIndex].username !== req.user.username) {
+            return res.status(403).json({ error: "Forbidden" });
+        }
 
-    res.status(200).json(result); // later no need value
+        const [ deletedTodo ] = todos.splice(deletedIndex, 1);
+
+        res.status(200).json(deletedTodo);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: `Internal server error.` });
+    }
 };
 
 module.exports = { getTodos, createTodo, updateTodo, deleteTodo };
