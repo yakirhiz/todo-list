@@ -16,16 +16,24 @@ export default function App() {
 
   // Called once when the page is reloading (or first component rendering)
   useEffect(() => {
-    console.log("<Effecting...>");
+    console.log("<useEffect>");
 
-    console.log("<Effect />");
+    console.log("<useEffect />");
   }, []);
 
   return (
     <div className="app">
-      {!authToken && <Auth setAuthenticated={setAuthenticated} />}
-      {authToken && <TodoList setAuthenticated={setAuthenticated} />}
-      <p className='copyright'>Yakir Hizkiyahu</p>
+      <header className="header">
+        <div className="app-header">
+          <h1>🔥 Todolist</h1>
+        </div>
+      </header>
+      <main>
+        {!authenticated ? <Auth setAuthenticated={setAuthenticated} /> : <TodoList setAuthenticated={setAuthenticated} />}
+      </main>
+      <footer className="footer">
+        <p className='copyright'>Yakir Hizkiyahu</p>
+      </footer>
     </div>
   );
 }

@@ -23,9 +23,7 @@ export default function TodoList({ setAuthenticated }) {
   }
 
   useEffect(() => {
-    console.log("<useEffect>");
     getData();
-    console.log("<useEffect />");
   }, []);
 
   return (
