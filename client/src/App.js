@@ -1,6 +1,9 @@
-import Auth from './components/Auth';
 import { useEffect, useState } from "react";
-import TodoList from './components/TodoList';
+import { Route, Routes, Link } from 'react-router-dom';
+
+import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 export default function App() {
   console.log("Rendering <App> component...");
@@ -26,10 +29,18 @@ export default function App() {
       <header className="header">
         <div className="app-header">
           <h1>🔥 Todolist</h1>
+          <div className="nav-links">
+              <Link to="/" className="nav-link">Home</Link>
+              <Link to="/about" className="nav-link">About</Link>
+          </div>
         </div>
       </header>
       <main>
-        {!authenticated ? <Auth setAuthenticated={setAuthenticated} /> : <TodoList setAuthenticated={setAuthenticated} />}
+        <Routes>
+          <Route path="/" element={<HomePage authenticated={authenticated} setAuthenticated={setAuthenticated} />}></Route>
+          <Route path="/about" element={<AboutPage />}></Route>
+          <Route path="*" element={<NotFoundPage />}></Route>
+        </Routes>
       </main>
       <footer className="footer">
         <p className='copyright'>Yakir Hizkiyahu</p>
