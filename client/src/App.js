@@ -3,6 +3,7 @@ import { Route, Routes, Link } from 'react-router-dom';
 
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
+import ProfilePage from "./pages/ProfilePage";
 import NotFoundPage from "./pages/NotFoundPage";
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
           <div className="nav-links">
               <Link to="/" className="nav-link">Home</Link>
               <Link to="/about" className="nav-link">About</Link>
+              <Link to="/profile" className="nav-link">Profile</Link>
           </div>
         </div>
       </header>
@@ -39,6 +41,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage authenticated={authenticated} setAuthenticated={setAuthenticated} />}></Route>
           <Route path="/about" element={<AboutPage />}></Route>
+          <Route path="/profile" element={<ProfilePage />}></Route>
           <Route path="*" element={<NotFoundPage />}></Route>
         </Routes>
       </main>

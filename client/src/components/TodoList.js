@@ -4,9 +4,6 @@ import ListHeader from './ListHeader';
 import List from './List';
 
 export default function TodoList({ setAuthenticated }) {
-
-  const username = localStorage.getItem("username");
-
   const [todos, setTodos] = useState([]);
 
   const getData = async () => {
@@ -29,7 +26,6 @@ export default function TodoList({ setAuthenticated }) {
   return (
     <>
       <ListHeader listName={'🔥 Todolist'} getData={getData} setAuthenticated={setAuthenticated} />
-      <p className='greeting'>Hello, <b>{username}</b></p>
       <List todos={todos} getData={getData} />
     </>
   );

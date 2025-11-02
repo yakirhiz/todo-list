@@ -62,7 +62,7 @@ export default function Auth({ setAuthenticated }) {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             disabled={isLoading}
-            maxlength="25"
+            maxLength={25}
           />
           <input
             type="password"
@@ -70,6 +70,7 @@ export default function Auth({ setAuthenticated }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             disabled={isLoading}
+            maxLength={25}
           />
           {!isLogIn && (
             <input
@@ -78,19 +79,27 @@ export default function Auth({ setAuthenticated }) {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               disabled={isLoading}
+              maxLength={25}
             />
           )}
-          <input type="submit" className="create" disabled={isLoading} />
+          <input
+            type="submit"
+            className="create"
+            disabled={isLoading}
+            value={isLoading ? 'Processing...' : (isLogIn ? 'Login' : 'Sign Up')}
+          />
           {error && <p style={{color:"red"}}>{error}</p>}
         </form>
         <div className='auth-options'>
           <button 
             onClick={() => viewLogin(false)}
-            style={{backgroundColor: isLogIn ? 'white' : '#BCBCBC'}}
+            className={isLogIn ? '' : 'active'}
+            disabled={isLoading}
           >Sign Up</button>
           <button 
             onClick={() => viewLogin(true)}
-            style={{backgroundColor: isLogIn ? '#BCBCBC' : 'white'}}
+            className={isLogIn ? 'active' : ''}
+            disabled={isLoading}
           >Login</button>
         </div>
       </div>
