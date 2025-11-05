@@ -18,6 +18,13 @@ export default function App() {
   const [authenticated, setAuthenticated] = useState(authToken === "true");
   console.log(`You are ${authenticated ? 'authenticated' : 'unauthenticated'}`);
 
+  const signOut = () => {
+    localStorage.removeItem("username");
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("token");
+    setAuthenticated(false);
+  }
+
   // Called once when the page is reloading (or first component rendering)
   useEffect(() => {
     console.log("<useEffect>");
@@ -34,6 +41,36 @@ export default function App() {
               <Link to="/" className="nav-link">Home</Link>
               <Link to="/about" className="nav-link">About</Link>
               <Link to="/profile" className="nav-link">Profile</Link>
+          </div>
+          <div className="user-controls-container">
+            <div className="user-controls">
+              <div className="drawer-toggle-btn-container">
+                <button
+                  className="drawer-toggle-btn"
+                >
+                  ☰ Menu
+                </button>
+              </div>
+              <div className="user-controls-btn-container">
+                {authenticated ? (
+                  <button
+                    className="btn btn-secondary"
+                    onClick={signOut}
+                  >
+                    Log Out
+                  </button>
+                ) : (
+                  <Link to="/" className="btn btn-primary">Log In / Sign Up</Link>
+                )}
+              </div>
+            </div>
+            <div className="user-greeting">
+              {authenticated ? (
+                <span>Welcome, <b>{username}</b>!</span>
+              ) : (
+                <span>Welcome, Guest!</span>
+              )}
+            </div>
           </div>
         </div>
       </header>

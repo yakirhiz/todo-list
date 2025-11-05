@@ -5,7 +5,7 @@ import TodoList from '../components/TodoList';
 export default function HomePage({ authenticated, setAuthenticated }) {
   return (
     <div className="home-page">
-      {!authenticated ? <Auth setAuthenticated={setAuthenticated} /> : <TodoList setAuthenticated={setAuthenticated} />}
+      {!authenticated ? <Auth setAuthenticated={setAuthenticated} /> : <TodoList />}
     </div>
   );
 }

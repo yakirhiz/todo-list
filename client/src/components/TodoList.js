@@ -3,7 +3,7 @@ import { getTodos } from '../services/todosApi';
 import ListHeader from './ListHeader';
 import List from './List';
 
-export default function TodoList({ setAuthenticated }) {
+export default function TodoList() {
   const [todos, setTodos] = useState([]);
 
   const getData = async () => {
@@ -25,7 +25,7 @@ export default function TodoList({ setAuthenticated }) {
 
   return (
     <>
-      <ListHeader listName={'🔥 Todolist'} getData={getData} setAuthenticated={setAuthenticated} />
+      <ListHeader listName={'🔥 Todolist'} getData={getData} />
       <List todos={todos} getData={getData} />
     </>
   );
