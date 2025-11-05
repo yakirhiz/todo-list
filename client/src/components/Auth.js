@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { login, signup } from '../services/usersApi';
+
+import eyeShow from '../assets/eye-black-pass-show.svg';
+import eyeHide from '../assets/eye-black-pass-hide.svg';
 
 export default function Auth({ setAuthenticated }) {
   const [isLogIn, setIsLogIn] = useState(true);
@@ -8,6 +11,26 @@ export default function Auth({ setAuthenticated }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const inputRef = useRef(null);
+
+  const togglePasswordVisibility = (e) => {
+    e.preventDefault();
+    
+    // Store current cursor position before changing type
+    const cursorPosition = inputRef.current.selectionStart;
+    
+    setShowPassword(prev => !prev);
+    
+    // Use setTimeout to restore cursor position after state update
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.selectionStart = cursorPosition;
+        inputRef.current.selectionEnd = cursorPosition;
+      }
+    }, 0);
+  };
 
   const viewLogin = (status) => {
     setError(null);
@@ -15,6 +38,7 @@ export default function Auth({ setAuthenticated }) {
     setUsername("");
     setPassword("");
     setConfirmPassword("");
+    setShowPassword(false);
     console.log(`isLogIn is set to ${status}`);
   };
 
@@ -64,17 +88,29 @@ export default function Auth({ setAuthenticated }) {
             disabled={isLoading}
             maxLength={25}
           />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={isLoading}
-            maxLength={25}
-          />
+          <div className="password-container">
+            <input
+              ref={inputRef}
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isLoading}
+              maxLength={25}
+              className="password-input"
+            />
+            <img
+              src={showPassword ? eyeHide : eyeShow}
+              alt="Toggle Password Visibility"
+              onClick={togglePasswordVisibility}
+              onMouseDown={(e) => e.preventDefault()}  // This is the key fix
+              width={24}
+              height={24}
+            />
+          </div>
           {!isLogIn && (
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Confirm password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
