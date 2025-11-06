@@ -1,6 +1,5 @@
 const pool = require('../db');
 const { generateToken, verifyPassword, hashPassword } = require('../auth');
-const bcrypt = require('bcrypt');
 
 /* Sign up */
 const signup = async (req, res) => {
@@ -53,22 +52,33 @@ const login = async (req, res) => {
 
 /* Update user */
 const updateUser = async (req, res) => {
-    res.status(500).json({ error: `Update user` });
-    // const { username, password } = req.body;
+    const { id: username } = req.params;
+    const { password } = req.body;
 
-    // try {
-    //     const query = 'UPDATE users SET ... WHERE username = $1 RETURNING *';
-    //     const users = await pool.query(query, [username]);
+    // Ensure the user is attempting to update themselves
+    if (username !== req.user.username) {
+        return res.status(403).json({ error: `You cannot update other users.` });
+    }
 
-    //     if (users.rows.length < 1) {
-    //         res.status(404).json({ error: `Deletion failed: a user named '${username}' does not exist.` });
-    //     } else {
-    //         res.json(ret.rows[0]); // return 204 'No content'
-    //     }
-    // } catch (err) {
-    //     console.log(err);
-    //     res.status(500).json({ error: `Internal server error.` });
-    // }
+    if (!password) {
+        return res.status(400).json({ error: `No fields to update.` });
+    }
+
+    const hashedPassword = await hashPassword(password);
+
+    try {
+        const query = 'UPDATE users SET hashed_password = $1 WHERE username = $2 RETURNING *';
+        const { rows, rowCount } = await pool.query(query, [hashedPassword, username]);
+
+        if (rowCount === 0) {
+            res.status(404).json({ error: `A user named '${username}' does not exist.` });
+        }
+
+        res.status(200).json(rows[0]);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: `Internal server error.` });
+    }
 };
 
 /* Delete user */

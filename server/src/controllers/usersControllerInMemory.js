@@ -1,5 +1,4 @@
 const { generateToken, verifyPassword, hashPassword } = require('../auth');
-const bcrypt = require('bcrypt');
 
 const users = {}
 
@@ -47,24 +46,28 @@ const login = async (req, res) => {
 
 /* Update user (not finished) */
 const updateUser = async (req, res) => {
-    const { username } = req.params;
+    const { id: username } = req.params;
     const { password } = req.body;
+
+    // Ensure the user is attempting to update themselves
+    if (username !== req.user.username) {
+        return res.status(403).json({ error: `You cannot delete other users.` });
+    }
+
+    if (!password) {
+        return res.status(400).json({ error: `No fields to update.` });
+    }
+
+    const hashedPassword = await hashPassword(password);
 
     try {
         if (!(username in users)) {
             return res.status(404).json({ error: `A user named '${username}' does not exist.` });
         }
 
-        // If a password is being updated, hash it
-        if (password) {
-            users[username].hashedPassword = await hashPassword(password); // Update password in the users object
-        }
+        users[username].hashedPassword = hashedPassword;
 
-        // You could also add additional fields here, for example:
-        // if (email) users[username].email = email;
-
-        // Optionally, return the updated user object or just a success message
-        res.status(200).json({ username, message: 'User updated successfully' });
+        res.status(200).json(users[username]);
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: `Internal server error.` });
