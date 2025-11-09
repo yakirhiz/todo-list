@@ -34,33 +34,46 @@ const createTodo = async (req, res) => {
     }
 };
 
-// TODO: need to user document id
+const updateTodo = async (req, res) => {
+    const { id } = req.params;
+    const { title, progress } = req.body;
 
-// const updateTodo = async (req, res) => {
-//     const { id } = req.params;
-//     const { username, title, progress } = req.body;
+    try {
+        const todo = await Todo.findOneAndUpdate(
+            { _id: id, username: req.user.username },
+            { title, progress },
+            { new: true }
+        );
 
-//     try {
-//         const query = 'UPDATE todos SET (title, progress) = ($1, $2) WHERE id = $3 RETURNING *';
-//         const ret = await pool.query(query, [title, progress, id]);
-//         res.json(ret.rows[0]);
-//     } catch (err) {
-//         console.log(err);
-//         res.status(500).send("Internal Server Error");
-//     }
-// };
+        if (!todo) {
+            return res.status(404).json({ error: "Todo not found" });
+        }
 
-// const deleteTodo = async (req, res) => {
-//     const { id } = req.params;
+        res.status(200).json(todo);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: `Internal server error.` });
+    }
+};
 
-//     try {
-//         const query = 'DELETE FROM todos WHERE id = $1 RETURNING *';
-//         const ret = await pool.query(query, [id]);
-//         res.json(ret.rows[0]);
-//     } catch (err) {
-//         console.log(err);
-//         res.status(500).send("Internal Server Error");
-//     }
-// };
+const deleteTodo = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const todo = await Todo.findOneAndDelete({
+            _id: id,
+            username: req.user.username
+        });
+
+        if (!todo) {
+            return res.status(404).json({ error: "Todo not found" });
+        }
+
+        res.status(200).json(todo);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: `Internal server error.` });
+    }
+};
 
 module.exports = { getTodos, createTodo, updateTodo, deleteTodo };

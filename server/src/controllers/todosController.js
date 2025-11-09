@@ -39,24 +39,11 @@ const updateTodo = async (req, res) => {
     const { title, progress } = req.body;
 
     try {
-        // Check if todo belongs to user
-        const checkQuery = 'SELECT * FROM todos WHERE id = $1';
-        const checkResult = await pool.query(checkQuery, [id]);
-
-        if (checkResult.rowCount === 0) {
-            return res.status(404).json({ error: "Todo not found" });
-        }
-
-        const todo = checkResult.rows[0];
-        if (todo.username !== req.user.username) {
-            return res.status(403).json({ error: "Forbidden" });
-        }
-
-        const query = 'UPDATE todos SET (title, progress) = ($1, $2) WHERE id = $3 RETURNING *';
-        const { rows, rowCount } = await pool.query(query, [title, progress, id]);
+        const query = 'UPDATE todos SET (title, progress) = ($1, $2) WHERE id = $3 AND username = $4 RETURNING *';
+        const { rows, rowCount } = await pool.query(query, [title, progress, id, req.user.username]);
 
         if (rowCount === 0) {
-            return res.status(404).json({ error: "Todo not found" });
+            return res.status(404).json({ error: "Todo not found or forbidden" });
         }
 
         res.status(200).json(rows[0]);
@@ -70,24 +57,11 @@ const deleteTodo = async (req, res) => {
     const { id } = req.params;
 
     try {
-        // Check if todo belongs to user
-        const checkQuery = 'SELECT * FROM todos WHERE id = $1';
-        const checkResult = await pool.query(checkQuery, [id]);
-
-        if (checkResult.rowCount === 0) {
-            return res.status(404).json({ error: "Todo not found" });
-        }
-
-        const todo = checkResult.rows[0];
-        if (todo.username !== req.user.username) {
-            return res.status(403).json({ error: "Forbidden" });
-        }
-
-        const query = 'DELETE FROM todos WHERE id = $1 RETURNING *';
-        const { rows, rowCount } = await pool.query(query, [id]);
+        const query = 'DELETE FROM todos WHERE id = $1 AND username = $2 RETURNING *';
+        const { rows, rowCount } = await pool.query(query, [id, req.user.username]);
 
         if (rowCount === 0) {
-            return res.status(404).json({ error: "Todo not found" });
+            return res.status(404).json({ error: "Todo not found or forbidden" });
         }
 
         res.status(200).json(rows[0]);
