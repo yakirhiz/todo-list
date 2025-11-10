@@ -10,11 +10,7 @@ function createIdGenerator() {
 const generateId = createIdGenerator();
 
 const getTodos = async (req, res) => {
-    const { username } = req.params;
-
-    if (username !== req.user.username) {
-        return res.status(403).json({ error: `Forbidden.` });
-    }
+    const username = req.user.username;
 
     try {
         const result = todos.filter(todo => todo.username === username);
@@ -27,11 +23,8 @@ const getTodos = async (req, res) => {
 };
 
 const createTodo = async (req, res) => {
-    const { username, title, progress } = req.body;
-
-    if (username !== req.user.username) {
-        return res.status(403).json({ error: `Forbidden.` });
-    }
+    const username = req.user.username;
+    const { title, progress } = req.body;
 
     try {
         todos.push({ id: generateId(), username, title, progress });
@@ -44,6 +37,7 @@ const createTodo = async (req, res) => {
 };
 
 const updateTodo = async (req, res) => {
+    const username = req.user.username;
     const { id } = req.params;
     const { title, progress } = req.body;
 
@@ -55,7 +49,7 @@ const updateTodo = async (req, res) => {
         }
 
         // Check ownership
-        if (todos[updatedIndex].username !== req.user.username) {
+        if (todos[updatedIndex].username !== username) {
             return res.status(403).json({ error: "Forbidden" });
         }
 
@@ -69,6 +63,7 @@ const updateTodo = async (req, res) => {
 };
 
 const deleteTodo = async (req, res) => {
+    const username = req.user.username;
     const { id } = req.params;
 
     try {
@@ -79,7 +74,7 @@ const deleteTodo = async (req, res) => {
         }
 
         // Check ownership
-        if (todos[deletedIndex].username !== req.user.username) {
+        if (todos[deletedIndex].username !== username) {
             return res.status(403).json({ error: "Forbidden" });
         }
 

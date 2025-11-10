@@ -3,7 +3,7 @@ const URL = "http://localhost:8000";
 /* GET */
 export const getTodos = async (username, token) => {
   try {
-    const res = await fetch(`${URL}/todos/${username}`, {
+    const res = await fetch(`${URL}/todos`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     

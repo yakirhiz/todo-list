@@ -1,23 +1,20 @@
 const Todo = require('./models/Todo.js');
 
 const getTodos = async (req, res) => {
-    const { username } = req.params;
+    const username = req.user.username;
 
     try {
         const todos = await Todo.find({ username: username });
-
-        if (!todos)
-            return res.status(500).json({ error: "Error" });
-
-        res.json(todos);
+        res.status(200).json(todos);
     } catch (err) {
         console.log(err);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({ error: `Internal server error.` });
     }
 };
 
 const createTodo = async (req, res) => {
-    const { username, title, progress } = req.body;
+    const username = req.user.username;
+    const { title, progress } = req.body;
 
     try {
         const todo = new Todo({
@@ -27,20 +24,21 @@ const createTodo = async (req, res) => {
         });
 
         const todoFromDB = await todo.save()
-        res.status(201).send(todoFromDB);
+        res.status(201).json(todoFromDB);
     } catch (err) {
         console.log(err);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({ error: `Internal server error.` });
     }
 };
 
 const updateTodo = async (req, res) => {
+    const username = req.user.username;
     const { id } = req.params;
     const { title, progress } = req.body;
 
     try {
         const todo = await Todo.findOneAndUpdate(
-            { _id: id, username: req.user.username },
+            { _id: id, username: username },
             { title, progress },
             { new: true }
         );
@@ -57,12 +55,13 @@ const updateTodo = async (req, res) => {
 };
 
 const deleteTodo = async (req, res) => {
+    const username = req.user.username;
     const { id } = req.params;
 
     try {
         const todo = await Todo.findOneAndDelete({
             _id: id,
-            username: req.user.username
+            username: username
         });
 
         if (!todo) {
