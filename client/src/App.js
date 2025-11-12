@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 
-import Header from "./components/Header";
 import Main from "./components/Main";
-import Footer from "./components/Footer";
+import { useNavigate } from "react-router";
 
 export default function App() {
   console.log("Rendering <App> component...");
+  
+  const navigate = useNavigate();
 
   // TODO: maybe use state for both + localStorage
   const username = localStorage.getItem("username");
@@ -21,6 +22,7 @@ export default function App() {
     localStorage.removeItem("authToken");
     localStorage.removeItem("token");
     setAuthenticated(false);
+    navigate("/");
   }
 
   // Called once when the page is reloading (or first component rendering)
@@ -32,9 +34,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <Header authenticated={authenticated} username={username} signOut={signOut} />
-      <Main authenticated={authenticated} setAuthenticated={setAuthenticated} />
-      <Footer />
+      <Main authenticated={authenticated} setAuthenticated={setAuthenticated} username={username} signOut={signOut} />
     </div>
   );
 }
