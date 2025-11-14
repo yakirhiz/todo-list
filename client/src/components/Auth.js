@@ -69,7 +69,7 @@ export default function Auth({ setAuthenticated }) {
       localStorage.setItem("authToken", true);
       localStorage.setItem("token", json.token);
       setError(null);
-      setAuthenticated(true); // window.location.reload();
+      setAuthenticated(true);
       navigate("/");
     } catch (err) {
       setError(err.message)
@@ -79,76 +79,121 @@ export default function Auth({ setAuthenticated }) {
   }
 
   return (
-    <div className="auth-container">
-      <form onSubmit={(e) => handleSubmit(e, isLogIn ? 'login' : 'signup')} >
-        <h2>{isLogIn ? 'Please log in' : 'Please sign up'}</h2>
-        <input
-          id="username"
-          type="text"
-          placeholder="Enter your username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+    <div className="auth-container-modern">
+      <div className="auth-tabs">
+        <button 
+          onClick={() => viewLogin(true)}
+          className={`auth-tab ${isLogIn ? 'active' : ''}`}
           disabled={isLoading}
-          maxLength={25}
-        />
-        <div className="password-container">
-          <input
-            id="password"
-            ref={inputRef}
-            type={showPassword ? "text" : "password"}
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={isLoading}
-            maxLength={25}
-            className="password-input"
-          />
-          <button
-            type="button"
-            className="password-toggle-btn"
-            onClick={togglePasswordVisibility}
-            onMouseDown={(e) => e.preventDefault()}  // This is the key fix
-            tabIndex={-1}
-          >
-            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-          </button>
+        >
+          Sign In
+        </button>
+        <button 
+          onClick={() => viewLogin(false)}
+          className={`auth-tab ${!isLogIn ? 'active' : ''}`}
+          disabled={isLoading}
+        >
+          Sign Up
+        </button>
+      </div>
+
+      <form onSubmit={(e) => handleSubmit(e, isLogIn ? 'login' : 'signup')} className="auth-form-modern">
+        <div className="auth-form-header">
+          <h2>{isLogIn ? 'Welcome back!' : 'Create your account'}</h2>
+          <p>{isLogIn ? 'Enter your credentials to continue' : 'Get started with your free account'}</p>
         </div>
+
+        <div className="input-group">
+          <label htmlFor="username">Username</label>
+          <div className="input-with-icon">
+            <User size={18} className="input-icon" />
+            <input
+              id="username"
+              type="text"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              disabled={isLoading}
+              maxLength={25}
+              className="modern-input"
+            />
+          </div>
+        </div>
+
+        <div className="input-group">
+          <label htmlFor="password">Password</label>
+          <div className="input-with-icon password-input-wrapper">
+            <Lock size={18} className="input-icon" />
+            <input
+              id="password"
+              ref={inputRef}
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isLoading}
+              maxLength={25}
+              className="modern-input"
+            />
+            <button
+              type="button"
+              className="password-toggle-btn"
+              onClick={togglePasswordVisibility}
+              onMouseDown={(e) => e.preventDefault()}  // This is the key fix
+              tabIndex={-1}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+        </div>
+
         {!isLogIn && (
-          <input
-            id="confirm-password"
-            type={showPassword ? "text" : "password"}
-            placeholder="Confirm your password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            disabled={isLoading}
-            maxLength={25}
-          />
+          <div className="input-group">
+            <label htmlFor="confirm-password">Confirm Password</label>
+            <div className="input-with-icon password-input-wrapper">
+              <Lock size={18} className="input-icon" />
+              <input
+                id="confirm-password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Confirm your password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                disabled={isLoading}
+                maxLength={25}
+                className="modern-input"
+              />
+            </div>
+          </div>
         )}
+
         {error && (
           <div className="error-message">
             <TriangleAlert size={18} />
             {error}
           </div>
         )}
-        <input
+
+        <button
           type="submit"
-          className="create"
+          className="auth-submit-btn"
           disabled={isLoading}
-          value={isLoading ? 'Processing...' : (isLogIn ? 'Login' : 'Sign Up')}
-        />
+        >
+          {isLoading ? (
+            <>
+              <span className="loading-spinner"></span>
+              Processing...
+            </>
+          ) : (
+            isLogIn ? 'Sign In' : 'Create Account'
+          )}
+        </button>
+
+        {isLogIn && (
+          <div className="auth-footer-link">
+            <a href="#forgot-password">Forgot your password?</a>
+          </div>
+        )}
       </form>
-      <div className='auth-options'>
-        <button 
-          onClick={() => viewLogin(false)}
-          className={isLogIn ? '' : 'active'}
-          disabled={isLoading}
-        >Sign Up</button>
-        <button 
-          onClick={() => viewLogin(true)}
-          className={isLogIn ? 'active' : ''}
-          disabled={isLoading}
-        >Login</button>
-      </div>
     </div>
   );
 }
