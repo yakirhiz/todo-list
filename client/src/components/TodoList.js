@@ -5,6 +5,7 @@ import List from './List';
 
 export default function TodoList() {
   const [todos, setTodos] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const getData = async () => {
     const username = localStorage.getItem("username");
@@ -23,10 +24,15 @@ export default function TodoList() {
     getData();
   }, []);
 
+  // Filter todos based on search query
+  const filteredTodos = todos.filter(todo => 
+    todo.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <>
-      <ListHeader listName={'🔥 Todolist'} getData={getData} />
-      <List todos={todos} getData={getData} />
+      <ListHeader listName={'🔥 Todolist'} getData={getData} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <List todos={filteredTodos} getData={getData} />
     </>
   );
 }
