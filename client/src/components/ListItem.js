@@ -14,7 +14,7 @@ export default function ListItem({todo, getData}) {
     
     try {
       await deleteTodo(todo.id, token);
-      getData();
+      await getData();
     } catch (err) {
       console.log(err);
     }

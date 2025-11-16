@@ -3,7 +3,7 @@ const { generateToken, verifyPassword, hashPassword } = require('../auth');
 const users = {}
 
 /* Sign up */
-const signup = async (req, res, next) => {
+const signup = async (req, res) => {
     const { username, password } = req.body;
 
     const hashedPassword = await hashPassword(password);

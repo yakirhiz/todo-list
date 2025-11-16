@@ -8,10 +8,8 @@ export default function App() {
   
   const navigate = useNavigate();
 
-  // TODO: maybe use state for both + localStorage
   const username = localStorage.getItem("username");
   const authToken = localStorage.getItem("authToken");
-  // const token = localStorage.getItem("token");
 
   // useState initialize the variable only once
   const [authenticated, setAuthenticated] = useState(authToken === "true");

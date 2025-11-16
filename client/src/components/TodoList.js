@@ -8,12 +8,10 @@ export default function TodoList() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const getData = async () => {
-    const username = localStorage.getItem("username");
     const token = localStorage.getItem("token");
-    console.log(`Fetching data for @${username}`);
 
     try {
-      const todos = await getTodos(username, token);
+      const todos = await getTodos(token);
       setTodos(todos);
     } catch (err) {
       console.log(err);

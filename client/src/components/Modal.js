@@ -2,11 +2,9 @@ import { useState } from 'react';
 import { postTodo, updateTodo } from '../services/todosApi';
 
 export default function Modal({ mode, setShowModal, getData, todo }) {
-  const username = localStorage.getItem("username");
   const editMode = mode === "edit"; // variable is optional
 
   const [data, setData] = useState({
-    username: editMode ? todo.username : username, // check is redundant
     title: editMode ? todo.title : "",
     progress: editMode ? todo.progress : 0
   })
@@ -27,32 +25,36 @@ export default function Modal({ mode, setShowModal, getData, todo }) {
 
     try {
       await postTodo(data, token);
-      setShowModal(false);
-      getData();
+      await getData();
     } catch (err) {
       console.log(err);
     }
+    setShowModal(false);
   }
 
   const editData = async (e) => {
     e.preventDefault();
 
+    if (isWhitespace(data.title)) {
+      alert("title cannot be empty");
+      return;
+    }
+
     const token = localStorage.getItem("token");
 
     try {
       await updateTodo(todo.id, data, token);
-      setShowModal(false);
-      getData();
+      await getData();
     } catch (err) {
       console.log(err);
     }
+    setShowModal(false);
   }
 
   const handleChange = (e) => {
     const {name, value} = e.target;
     setData(data => ({...data, [name]: value}));
   }
-
 
   return (
     <div className="overlay">
@@ -72,7 +74,7 @@ export default function Modal({ mode, setShowModal, getData, todo }) {
             autoFocus
           />
           <br />
-          <label htmlFor="range">Drag to select you current progress</label>
+          <label htmlFor="range">Drag to select you current progress: {data.progress}%</label>
           <input
             required
             type="range"
@@ -87,6 +89,7 @@ export default function Modal({ mode, setShowModal, getData, todo }) {
             className={mode}
             type="submit"
             onClick={editMode ? editData : postData}
+            value={editMode ? "Save Changes" : "Add Task"}
           />
         </form>
       </div>

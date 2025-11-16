@@ -59,6 +59,7 @@ export default function Auth({ setAuthenticated }) {
     }
 
     setIsLoading(true);
+    setError(null);
 
     try {
       const json = (endpoint === 'signup') ?
@@ -66,9 +67,9 @@ export default function Auth({ setAuthenticated }) {
         await login(username, password);
 
       localStorage.setItem("username", json.username);
-      localStorage.setItem("authToken", true);
+      localStorage.setItem("authToken", "true");
       localStorage.setItem("token", json.token);
-      setError(null);
+
       setAuthenticated(true);
       navigate("/");
     } catch (err) {
