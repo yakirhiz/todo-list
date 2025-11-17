@@ -1,10 +1,11 @@
 import { useState, useRef } from 'react';
 import { login, signup } from '../services/usersApi';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../contexts/AuthContext';
 
 import { Eye, EyeOff, User, Lock, Mail, TriangleAlert } from 'lucide-react';
 
-export default function Auth({ setAuthenticated }) {
+export default function Auth() {
   const [isLogIn, setIsLogIn] = useState(true);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,6 +15,7 @@ export default function Auth({ setAuthenticated }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
+  const { signIn, signUp } = useAuthContext();
 
   const inputRef = useRef(null);
 
@@ -62,15 +64,11 @@ export default function Auth({ setAuthenticated }) {
     setError(null);
 
     try {
-      const json = (endpoint === 'signup') ?
-        await signup(username, password) :
-        await login(username, password);
-
-      localStorage.setItem("username", json.username);
-      localStorage.setItem("authToken", "true");
-      localStorage.setItem("token", json.token);
-
-      setAuthenticated(true);
+      if (endpoint === 'login') {
+        await signIn(username, password);
+      } else {
+        await signUp(username, password);
+      }
       navigate("/");
     } catch (err) {
       setError(err.message)

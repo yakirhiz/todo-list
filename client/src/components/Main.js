@@ -12,18 +12,18 @@ import ProfilePage from "../pages/ProfilePage";
 import SettingsPage from "../pages/SettingsPage";
 import NotFoundPage from "../pages/NotFoundPage";
 
-export default function Main({ authenticated, setAuthenticated, username, signOut }) {
+export default function Main() {
   return (
     <Routes>
-      <Route element={<MainLayout authenticated={authenticated} username={username} signOut={signOut} />}>
+      <Route element={<MainLayout />}>
         {/* Always Accessible Routes */}
-        <Route path="/" element={<HomePage authenticated={authenticated} setAuthenticated={setAuthenticated} />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
 
         {/* Private Routes */}
         <Route element={<PrivateRoutes />}>
-          <Route path="/profile" element={<ProfilePage setAuthenticated={setAuthenticated} />} />
-          <Route path="/settings" element={<SettingsPage setAuthenticated={setAuthenticated} />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
 
         {/* Catch-all Route */}
@@ -33,7 +33,7 @@ export default function Main({ authenticated, setAuthenticated, username, signOu
       <Route element={<FullscreenLayout />}>
         {/* Public Routes */}
         <Route element={<PublicRoutes />}>
-          <Route path="/login" element={<LoginPage setAuthenticated={setAuthenticated} />} />
+          <Route path="/login" element={<LoginPage />} />
         </Route>
       </Route>
     </Routes>

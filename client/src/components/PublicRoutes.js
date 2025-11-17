@@ -1,9 +1,10 @@
 import { Navigate, Outlet } from 'react-router-dom';
+import { useAuthContext } from '../contexts/AuthContext';
 
-export default function PublicRoute(/* { authenticated } */) {
-  const isAuthenticated = Boolean(localStorage.getItem('token'));
+export default function PublicRoute() {
+  const { authenticated } = useAuthContext();
 
   // If user is authenticated, redirect to home page
   // Otherwise, allow access to the public routes
-  return isAuthenticated ? <Navigate to="/" replace /> : <Outlet />;
+  return authenticated ? <Navigate to="/" replace /> : <Outlet />;
 }

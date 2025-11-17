@@ -2,7 +2,7 @@ import Auth from '../components/Auth';
 import { Link } from 'react-router-dom';
 import { CheckCircle, ListTodo, Zap, Shield } from 'lucide-react';
 
-export default function LoginPage({ setAuthenticated }) {
+export default function LoginPage() {
   return (
     <div className="login-page">
       <div className="login-split-container">
@@ -14,7 +14,7 @@ export default function LoginPage({ setAuthenticated }) {
               <span className="logo-text">Todolist</span>
             </Link>
           </div>
-          <Auth setAuthenticated={setAuthenticated} />
+          <Auth />
         </div>
 
         {/* Right side - Marketing content */}
