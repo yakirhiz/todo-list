@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { postTodo, updateTodo } from '../services/todosApi';
 
-export default function Modal({ mode, setShowModal, getData, todo }) {
+export default function Modal({ mode, setShowModal, getData, todo, showModal }) {
   const editMode = mode === "edit"; // variable is optional
 
   const [data, setData] = useState({
@@ -55,6 +55,18 @@ export default function Modal({ mode, setShowModal, getData, todo }) {
     const {name, value} = e.target;
     setData(data => ({...data, [name]: value}));
   }
+
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = ''; // Cleanup
+    };
+  }, [showModal]);
 
   return (
     <div className="overlay">

@@ -35,7 +35,7 @@ export default function ListItem({todo, getData}) {
           <Trash2 size={16} />
         </button>
       </div>
-      {showModal && <Modal mode={'edit'} setShowModal={setShowModal} getData={getData} todo={todo} />}
+      {showModal && <Modal mode={'edit'} setShowModal={setShowModal} getData={getData} todo={todo} showModal={showModal} />}
     </li>
   );
 }

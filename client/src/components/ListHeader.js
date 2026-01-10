@@ -17,7 +17,7 @@ export default function ListHeader({ listName, getData, searchQuery, setSearchQu
           <Plus size={16} />
         </button>
       </div>
-      {showModal && <Modal mode={'create'} setShowModal={setShowModal} getData={getData} />}
+      {showModal && <Modal mode={'create'} setShowModal={setShowModal} getData={getData} showModal={showModal} />}
     </div>
   );
 }
